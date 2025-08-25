@@ -64,4 +64,11 @@ class Task extends Model
         return $this->belongsToMany(Task::class, 'task_dependencies', 'depends_on_task_id', 'task_id')
                     ->withTimestamps();
     }
+
+    public function hasIncompleteDependencies(): bool
+    {
+        return $this->dependsOnTasks()->where('status', '!=', 'complete')->exists();
+    }
+
+
 }
