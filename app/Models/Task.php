@@ -19,7 +19,7 @@ class Task extends Model
         'status',
         'due_date',
         'created_by',
-        'assigned_to',
+        'assignee_id',
     ];
 
     /**
@@ -44,7 +44,7 @@ class Task extends Model
      */
     public function assignee(): BelongsTo
     {
-        return $this->belongsTo(User::class, 'assigned_to');
+        return $this->belongsTo(User::class, 'assignee_id');
     }
 
     /**

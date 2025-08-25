@@ -18,12 +18,12 @@ return new class extends Migration
             $table->enum('status', ['pending', 'completed', 'canceled'])->default('pending');
             $table->date('due_date')->nullable();
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
-            $table->foreignId('assigned_to')->nullable()->constrained('users')->onDelete('set null');
+            $table->foreignId('assignee_id')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
             
             // Indexes for better performance
             $table->index(['status', 'due_date']);
-            $table->index('assigned_to');
+            $table->index('assignee_id');
             $table->index('created_by');
         });
     }
