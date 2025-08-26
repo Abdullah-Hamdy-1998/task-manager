@@ -4,8 +4,8 @@ namespace Database\Seeders;
 
 use App\Models\Task;
 use App\Models\User;
-use Illuminate\Database\Seeder;
 use Carbon\Carbon;
+use Illuminate\Database\Seeder;
 
 class TaskSeeder extends Seeder
 {
@@ -19,7 +19,7 @@ class TaskSeeder extends Seeder
         $user = User::find(2);    // Regular user
 
         // Create tasks with different statuses and due dates for testing filters
-        
+
         // Pending tasks assigned to user
         Task::factory()->create([
             'title' => 'Setup Development Environment',
@@ -120,7 +120,7 @@ class TaskSeeder extends Seeder
         // Create additional random tasks for more comprehensive testing
         Task::factory(15)->create([
             'created_by' => $manager->id,
-            'assignee_id' => function() use ($manager, $user) {
+            'assignee_id' => function () use ($manager, $user) {
                 return fake()->randomElement([$manager->id, $user->id]);
             },
         ]);

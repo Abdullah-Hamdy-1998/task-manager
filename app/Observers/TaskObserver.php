@@ -12,7 +12,7 @@ class TaskObserver
      */
     public function creating(Task $task): void
     {
-        if (!$task->created_by) {
+        if (! $task->created_by) {
             $task->created_by = Auth::id();
         }
     }

@@ -33,6 +33,7 @@ class TaskAccessService
     private function getTasksForManager(Request $request, int $perPage): LengthAwarePaginator
     {
         $filters = $request->only(['status', 'due_from', 'due_to', 'assignee_id']);
+
         return $this->taskService->getAllTasks($filters, $perPage);
     }
 
@@ -40,17 +41,18 @@ class TaskAccessService
     {
         $filters = $request->only(['status', 'due_from', 'due_to']);
         $filters['assignee_id'] = $user->id; // Only show tasks assigned to this user
+
         return $this->taskService->getAllTasks($filters, $perPage);
     }
 
     public function getAllowedFilters(User $user): array
     {
         $baseFilters = ['status', 'due_from', 'due_to'];
-        
+
         if ($this->isManager($user)) {
             $baseFilters[] = 'assignee_id';
         }
-        
+
         return $baseFilters;
     }
 }

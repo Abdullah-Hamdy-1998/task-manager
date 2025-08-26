@@ -18,8 +18,11 @@ use Illuminate\Support\Facades\Auth;
 class TaskController extends Controller
 {
     protected $taskService;
+
     protected $taskCreationService;
+
     protected $taskUpdateService;
+
     protected $taskAccessService;
 
     public function __construct(
@@ -38,7 +41,7 @@ class TaskController extends Controller
     {
         $user = Auth::user();
         $perPage = (int) $request->input('per_page', 15);
-        
+
         $tasks = $this->taskAccessService->getTasksForUser($user, $request, $perPage);
 
         return response()->json(TaskResource::collection($tasks)->response()->getData(true));

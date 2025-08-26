@@ -32,12 +32,14 @@ class TaskFactory extends Factory
             'due_date' => $this->faker->dateTimeBetween('now', '+1 year')->format('Y-m-d'),
             'created_by' => function () {
                 $existingUsers = User::pluck('id')->toArray();
-                return !empty($existingUsers) ? $this->faker->randomElement($existingUsers) : User::factory();
+
+                return ! empty($existingUsers) ? $this->faker->randomElement($existingUsers) : User::factory();
             },
             'assignee_id' => function () {
                 $existingUsers = User::pluck('id')->toArray();
-                return !empty($existingUsers) ? $this->faker->randomElement($existingUsers) : User::factory();
-            }
+
+                return ! empty($existingUsers) ? $this->faker->randomElement($existingUsers) : User::factory();
+            },
         ];
     }
 
