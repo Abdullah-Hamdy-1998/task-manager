@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\Validator;
 uses(RefreshDatabase::class);
 
 beforeEach(function () {
-    $role = Role::factory()->create(['name' => 'admin']);
+    $role = Role::factory()->create(['name' => 'manager']);
     $this->user = User::factory()->create(['role_id' => $role->id]);
     $this->assignee = User::factory()->create(['role_id' => $role->id]);
     Auth::login($this->user);
