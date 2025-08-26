@@ -5,7 +5,7 @@ namespace App\Http\Resources;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class TaskResource extends JsonResource
+class TaskShowResource extends JsonResource
 {
     public function toArray(Request $request): array
     {
@@ -23,6 +23,7 @@ class TaskResource extends JsonResource
                     'name' => $this->assignee->name,
                 ];
             }),
+            'dependencies' => TaskResource::collection($this->whenLoaded('dependencies')),
         ];
     }
 }
