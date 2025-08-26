@@ -2,12 +2,11 @@
 
 namespace App\Repositories;
 
+use App\Contracts\TaskFilterServiceInterface;
+use App\Contracts\TaskRepositoryInterface;
 use App\Models\Task;
 use App\Models\User;
-use App\Services\TaskFilterService;
 use Illuminate\Database\Eloquent\Model;
-use App\Contracts\TaskRepositoryInterface;
-use App\Contracts\TaskFilterServiceInterface;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class TaskRepository implements TaskRepositoryInterface
@@ -18,6 +17,7 @@ class TaskRepository implements TaskRepositoryInterface
     {
         $this->taskFilterService = $taskFilterService;
     }
+
     public function create(array $data): Model
     {
         return Task::create($data);
@@ -25,13 +25,14 @@ class TaskRepository implements TaskRepositoryInterface
 
     public function find(int $id): ?Task
     {
-        return Task::withRelations()->find($id);
+        return Task::with(['dependsOnTasks', 'dependentTasks', 'assignee', 'creator'])->find($id);
     }
 
     public function getFilteredTasks(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
         $query = Task::query();
         $query = $this->taskFilterService->applyFilters($query, $filters);
+
         return $query->paginate($perPage);
     }
 
@@ -39,6 +40,7 @@ class TaskRepository implements TaskRepositoryInterface
     {
         $query = Task::query()->forUser($user);
         $query = $this->taskFilterService->applyFilters($query, $filters);
+
         return $query->paginate($perPage);
     }
 
@@ -50,6 +52,7 @@ class TaskRepository implements TaskRepositoryInterface
     public function updateStatus(Task $task, string $newStatus): bool
     {
         $task->status = $newStatus;
+
         return $task->save();
     }
 }

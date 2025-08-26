@@ -2,9 +2,9 @@
 
 namespace App\Http\Controllers;
 
-use App\Services\AuthService;
-use App\Http\Requests\RegisterRequest;
 use App\Http\Requests\LoginRequest;
+use App\Http\Requests\RegisterRequest;
+use App\Services\AuthService;
 
 class AuthController extends Controller
 {
@@ -41,6 +41,7 @@ class AuthController extends Controller
     public function logout()
     {
         $result = $this->authService->logout();
+
         return response()->json(['message' => $result['message']], $result['status']);
     }
 }

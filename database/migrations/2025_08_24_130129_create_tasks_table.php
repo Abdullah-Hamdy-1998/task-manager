@@ -20,7 +20,7 @@ return new class extends Migration
             $table->foreignId('created_by')->constrained('users')->onDelete('cascade');
             $table->foreignId('assignee_id')->nullable()->constrained('users')->onDelete('set null');
             $table->timestamps();
-            
+
             // Indexes for better performance
             $table->index(['status', 'due_date']);
             $table->index('assignee_id');

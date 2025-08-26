@@ -16,7 +16,7 @@ class TaskNotFoundException extends Exception
     {
         return response()->json([
             'error' => 'Task Not Found',
-            'message' => $this->getMessage()
+            'message' => $this->getMessage(),
         ], 404);
     }
 }

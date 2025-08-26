@@ -16,7 +16,7 @@ return new class extends Migration
             $table->foreignId('task_id')->constrained('tasks')->onDelete('cascade');
             $table->foreignId('depends_on_task_id')->constrained('tasks')->onDelete('cascade');
             $table->timestamps();
-            
+
             // Ensure a task cannot depend on itself and prevent duplicate dependencies
             $table->unique(['task_id', 'depends_on_task_id']);
             $table->index('task_id');

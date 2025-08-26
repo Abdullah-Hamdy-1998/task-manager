@@ -8,7 +8,7 @@ class TaskAlreadyCompletedException extends Exception
 {
     public function __construct(?string $message = null, int $code = 0, ?Exception $previous = null)
     {
-        $message = $message ?: "Cannot add dependency to a completed task.";
+        $message = $message ?: 'Cannot add dependency to a completed task.';
         parent::__construct($message, $code, $previous);
     }
 

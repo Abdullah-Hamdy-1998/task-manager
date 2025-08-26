@@ -8,7 +8,7 @@ class TaskIncompleteDependenciesException extends Exception
 {
     public function __construct(?string $message = null, int $code = 0, ?Exception $previous = null)
     {
-        $message = $message ?: "Cannot mark task as completed until all dependencies are completed.";
+        $message = $message ?: 'Cannot mark task as completed until all dependencies are completed.';
         parent::__construct($message, $code, $previous);
     }
 
@@ -16,7 +16,7 @@ class TaskIncompleteDependenciesException extends Exception
     {
         return response()->json([
             'error' => 'Incomplete Dependencies',
-            'message' => $this->getMessage()
+            'message' => $this->getMessage(),
         ], 422);
     }
 }

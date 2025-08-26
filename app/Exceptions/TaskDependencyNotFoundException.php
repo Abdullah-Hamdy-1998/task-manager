@@ -16,7 +16,7 @@ class TaskDependencyNotFoundException extends Exception
     {
         return response()->json([
             'error' => 'Task Dependency Not Found',
-            'message' => $this->getMessage()
+            'message' => $this->getMessage(),
         ], 404);
     }
 }

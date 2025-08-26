@@ -2,9 +2,9 @@
 
 namespace App\Services;
 
+use App\Contracts\TaskCycleServiceInterface;
 use App\Models\Task;
 use Illuminate\Support\Facades\DB;
-use App\Contracts\TaskCycleServiceInterface;
 
 class TaskCycleService implements TaskCycleServiceInterface
 {
@@ -35,6 +35,6 @@ class TaskCycleService implements TaskCycleServiceInterface
 
         $result = DB::select($query, [$dependsOnTask->id, $task->id]);
 
-        return !empty($result);
+        return ! empty($result);
     }
 }
