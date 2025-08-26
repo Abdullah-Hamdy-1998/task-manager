@@ -41,7 +41,7 @@ class TaskController extends Controller
         $perPage = (int) $request->input('per_page', 15);
         $tasks = $this->taskService->getAllTasks($filters, $perPage);
 
-        return response()->json(TaskResource::collection($tasks));
+        return response()->json(TaskResource::collection($tasks)->response()->getData(true));
     }
 
     public function myTasks(Request $request): JsonResponse
@@ -50,7 +50,7 @@ class TaskController extends Controller
         $perPage = (int) $request->input('per_page', 15);
         $tasks = $this->taskService->getMyTasks(Auth::user(), $filters, $perPage);
 
-        return response()->json(TaskResource::collection($tasks));
+        return response()->json(TaskResource::collection($tasks)->response()->getData(true));
     }
 
     public function store(CreateTaskRequest $request): JsonResponse
