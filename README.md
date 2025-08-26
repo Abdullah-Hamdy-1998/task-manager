@@ -28,7 +28,6 @@ A production-ready Laravel 12 REST API for task management with role-based acces
 
 - PHP 8.2+
 - Composer
-- Node.js & NPM
 - MySQL 8.0+
 - Docker (optional)
 
@@ -76,25 +75,84 @@ A production-ready Laravel 12 REST API for task management with role-based acces
 
    The API will be available at `http://localhost:8000`
 
-### Docker Setup
+### Docker Setup (Recommended)
 
-1. **Install Laravel Sail**
+For a complete Docker-based installation, follow these detailed steps:
+
+#### Prerequisites
+- Docker Desktop installed and running
+- Git
+
+#### Step-by-Step Installation
+
+1. **Clone the repository**
    ```bash
-   composer require laravel/sail --dev
-   php artisan sail:install
+   git clone https://github.com/Abdullah-Hamdy-1998/task-manager.git
+   cd task-manager
    ```
 
-2. **Start Docker containers**
+2. **Install Composer dependencies**
    ```bash
+   # If you have PHP/Composer locally
+   composer install
+   
+   # OR using Docker (if you don't have PHP locally)
+   docker run --rm -v $(pwd):/app composer install
+   ```
+
+3. **Environment Configuration**
+   ```bash
+   # Copy the environment file
+   cp .env.example .env
+   ```
+
+   **Update the `.env` file with Docker-specific settings:**
+   ```env
+   APP_NAME="Task Management System"
+   APP_ENV=local
+   APP_KEY=
+   APP_DEBUG=true
+   APP_URL=http://localhost
+   
+   # Database Configuration for Docker
+   DB_CONNECTION=mysql
+   DB_HOST=mysql
+   DB_PORT=3306
+   DB_DATABASE=task_manager
+   DB_USERNAME=sail
+   DB_PASSWORD=password
+   
+   # Optional: Set custom ports if needed
+   APP_PORT=80
+   FORWARD_DB_PORT=3306
+   VITE_PORT=5173
+   ```
+
+4. **Install Laravel Sail (if not already installed)**
+   ```bash
+   composer require laravel/sail --dev
+   ```
+
+5. **Start Docker containers**
+   ```bash
+   # Start all services in detached mode
    ./vendor/bin/sail up -d
    ```
 
-3. **Run migrations and seeders**
+6. **Generate Application Key**
+   ```bash
+   ./vendor/bin/sail artisan key:generate
+   ```
+
+7. **Generate JWT Secret Key**
+   ```bash
+   ./vendor/bin/sail artisan jwt:secret
+   ```
+
+8. **Run Database Migrations and Seeders**
    ```bash
    ./vendor/bin/sail artisan migrate --seed
    ```
-
-   The API will be available at `http://localhost`
 
 ## Seeded Test Accounts
 
@@ -214,39 +272,3 @@ php artisan test
 You can import the Postman collection for testing the API:
 
 - [Download Collection](postman/TaskManagementSystem.postman_collection.json)
-
-## Error Handling
-
-The API returns consistent JSON error responses:
-
-```json
-{
-  "error": "Error Type",
-  "message": "Detailed error message"
-}
-```
-
-## Performance Optimizations
-
-- **Eager Loading** - Relationships are eagerly loaded to prevent N+1 queries
-- **Database Indexing** - Proper indexes on frequently queried columns
-- **Pagination** - All list endpoints support pagination
-- **Query Optimization** - Efficient filtering and sorting
-
-## Security Features
-
-- JWT token blacklisting for secure logout
-- Role-based authorization policies
-- Input validation and sanitization
-- CORS protection
-- Rate limiting (configurable)
-
-## Development
-
-### Code Style
-
-The project follows PSR-12 coding standards. Run PHP CS Fixer:
-
-```bash
-./vendor/bin/pint
-```
