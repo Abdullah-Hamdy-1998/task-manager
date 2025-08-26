@@ -6,7 +6,6 @@ use App\Contracts\TaskRepositoryInterface;
 use App\Contracts\TaskServiceInterface;
 use App\Exceptions\TaskNotFoundException;
 use App\Models\Task;
-use App\Models\User;
 use Illuminate\Pagination\LengthAwarePaginator;
 
 class TaskService implements TaskServiceInterface
@@ -21,11 +20,6 @@ class TaskService implements TaskServiceInterface
     public function getAllTasks(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
         return $this->taskRepository->getFilteredTasks($filters, $perPage);
-    }
-
-    public function getMyTasks(User $user, array $filters = [], int $perPage = 15): LengthAwarePaginator
-    {
-        return $this->taskRepository->getUserTasks($user, $filters, $perPage);
     }
 
     public function getTask(int $id): ?Task

@@ -9,6 +9,7 @@ use App\Contracts\TaskRepositoryInterface;
 use App\Contracts\TaskServiceInterface;
 use App\Contracts\TaskUpdateServiceInterface;
 use App\Repositories\TaskRepository;
+use App\Services\TaskAccessService;
 use App\Services\TaskCreationService;
 use App\Services\TaskCycleService;
 use App\Services\TaskFilterService;
@@ -26,6 +27,7 @@ class AppServiceProvider extends ServiceProvider
         $this->app->bind(TaskUpdateServiceInterface::class, TaskUpdateService::class);
         $this->app->bind(TaskFilterServiceInterface::class, TaskFilterService::class);
         $this->app->bind(TaskCycleServiceInterface::class, TaskCycleService::class);
+        $this->app->singleton(TaskAccessService::class);
     }
 
     /**

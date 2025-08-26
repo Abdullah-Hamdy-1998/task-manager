@@ -5,7 +5,6 @@ namespace App\Repositories;
 use App\Contracts\TaskFilterServiceInterface;
 use App\Contracts\TaskRepositoryInterface;
 use App\Models\Task;
-use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Pagination\LengthAwarePaginator;
 
@@ -31,14 +30,6 @@ class TaskRepository implements TaskRepositoryInterface
     public function getFilteredTasks(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
         $query = Task::query();
-        $query = $this->taskFilterService->applyFilters($query, $filters);
-
-        return $query->paginate($perPage);
-    }
-
-    public function getUserTasks(User $user, array $filters = [], int $perPage = 15): LengthAwarePaginator
-    {
-        $query = Task::query()->forUser($user);
         $query = $this->taskFilterService->applyFilters($query, $filters);
 
         return $query->paginate($perPage);

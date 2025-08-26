@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Http\Resources\TaskResource;
 use App\Http\Resources\TaskShowResource;
 use App\Models\Task;
+use App\Services\TaskAccessService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -17,38 +18,28 @@ use Illuminate\Support\Facades\Auth;
 class TaskController extends Controller
 {
     protected $taskService;
-
     protected $taskCreationService;
-
     protected $taskUpdateService;
-
-    protected $taskDependencyService;
+    protected $taskAccessService;
 
     public function __construct(
         TaskServiceInterface $taskService,
         TaskCreationServiceInterface $taskCreationService,
-        TaskUpdateServiceInterface $taskUpdateService
+        TaskUpdateServiceInterface $taskUpdateService,
+        TaskAccessService $taskAccessService
     ) {
         $this->taskService = $taskService;
         $this->taskCreationService = $taskCreationService;
         $this->taskUpdateService = $taskUpdateService;
+        $this->taskAccessService = $taskAccessService;
     }
 
     public function index(Request $request): JsonResponse
     {
-        $this->authorize('viewAny', Task::class);
-        $filters = $request->only(['status', 'due_from', 'due_to', 'assignee_id']);
+        $user = Auth::user();
         $perPage = (int) $request->input('per_page', 15);
-        $tasks = $this->taskService->getAllTasks($filters, $perPage);
-
-        return response()->json(TaskResource::collection($tasks)->response()->getData(true));
-    }
-
-    public function myTasks(Request $request): JsonResponse
-    {
-        $filters = $request->only(['status', 'due_from', 'due_to']);
-        $perPage = (int) $request->input('per_page', 15);
-        $tasks = $this->taskService->getMyTasks(Auth::user(), $filters, $perPage);
+        
+        $tasks = $this->taskAccessService->getTasksForUser($user, $request, $perPage);
 
         return response()->json(TaskResource::collection($tasks)->response()->getData(true));
     }
