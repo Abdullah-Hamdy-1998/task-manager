@@ -2,11 +2,10 @@
 
 namespace App\Services;
 
-use Tymon\JWTAuth\Exceptions\JWTException;
-use Tymon\JWTAuth\Facades\JWTAuth;
-use App\Models\User;
-use App\Models\Role;
 use App\Http\Resources\UserResource;
+use App\Models\Role;
+use App\Models\User;
+use Tymon\JWTAuth\Facades\JWTAuth;
 
 class AuthService
 {
@@ -24,7 +23,7 @@ class AuthService
         $token = JWTAuth::attempt(['email' => $data['email'], 'password' => $data['password']]);
 
         $user->load('role');
-        
+
         return ['user' => new UserResource($user), 'token' => $token, 'status' => 201];
     }
 
@@ -40,6 +39,7 @@ class AuthService
     public function logout()
     {
         JWTAuth::invalidate(JWTAuth::getToken());
+
         return ['message' => 'Successfully logged out', 'status' => 200];
     }
 }
