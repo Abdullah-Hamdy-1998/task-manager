@@ -2,12 +2,15 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Task extends Model
 {
+    use HasFactory;
+
     /**
      * The attributes that are mass assignable.
      *
@@ -53,7 +56,7 @@ class Task extends Model
     public function dependsOnTasks(): BelongsToMany
     {
         return $this->belongsToMany(Task::class, 'task_dependencies', 'task_id', 'depends_on_task_id')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
     /**
@@ -62,7 +65,7 @@ class Task extends Model
     public function dependentTasks(): BelongsToMany
     {
         return $this->belongsToMany(Task::class, 'task_dependencies', 'depends_on_task_id', 'task_id')
-                    ->withTimestamps();
+            ->withTimestamps();
     }
 
     /**
@@ -92,6 +95,7 @@ class Task extends Model
         if ($to) {
             $query->where('due_date', '<=', $to);
         }
+
         return $query;
     }
 
@@ -101,19 +105,6 @@ class Task extends Model
     public function scopeByAssignee($query, $assigneeId)
     {
         return $query->where('assignee_id', $assigneeId);
-    }
-
-    /**
-     * Scope to eager load all task relationships.
-     */
-    public function scopeWithRelations($query)
-    {
-        return $query->with([
-            'dependsOnTasks',
-            'dependentTasks',
-            'assignee',
-            'creator'
-        ]);
     }
 
     /**
