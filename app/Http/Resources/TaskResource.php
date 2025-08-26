@@ -15,12 +15,16 @@ class TaskResource extends JsonResource
             'description' => $this->description,
             'status' => $this->status,
             'due_date' => $this->due_date ? $this->due_date->format('Y-m-d') : null,
-            'created_by' => $this->created_by,
-            'assignee_id' => $this->assignee_id,
             'assignee' => $this->whenLoaded('assignee', function () {
                 return [
                     'id' => $this->assignee->id,
                     'name' => $this->assignee->name,
+                ];
+            }),
+            'creator' => $this->whenLoaded('creator', function () {
+                return [
+                    'id' => $this->creator->id,
+                    'name' => $this->creator->name,
                 ];
             }),
         ];
