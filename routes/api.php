@@ -11,13 +11,12 @@ Route::middleware('auth:api')->group(function () {
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::prefix('tasks')->group(function () {
-        Route::get('/', [TaskController::class, 'index'])->middleware('can:viewAny,App\Models\Task');
-        Route::get('/my-tasks', [TaskController::class, 'myTasks'])->middleware('can:viewOwn,App\Models\Task');
-        Route::post('/', [TaskController::class, 'store'])->middleware('can:create,App\Models\Task');
-        Route::get('/{task}', [TaskController::class, 'show'])->middleware('can:view,task');
-        Route::put('/{task}', [TaskController::class, 'update'])->middleware('can:update,task');
-        Route::patch('/{task}/status', [TaskController::class, 'updateStatus'])->middleware('can:updateStatus,task');
-        Route::post('/{task}/dependencies', [TaskController::class, 'addDependency'])->middleware('can:addDependency,task');
-        Route::delete('/{task}', [TaskController::class, 'destroy'])->middleware('can:delete,task');
+        Route::get('/', [TaskController::class, 'index']);
+        Route::get('/my-tasks', [TaskController::class, 'myTasks']);
+        Route::post('/', [TaskController::class, 'store']);
+        Route::get('/{id}', [TaskController::class, 'show']);
+        Route::put('/{id}', [TaskController::class, 'update']);
+        Route::patch('/{id}/status', [TaskController::class, 'updateStatus']);
+        Route::post('/{id}/dependencies', [TaskController::class, 'addDependency']);
     });
 });
