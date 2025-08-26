@@ -195,7 +195,7 @@ curl -X GET http://localhost/api/tasks \
 
 ## Database Schema
 
-![Database ERD](erd.png)
+![Database ERD](ERD.png)
 
 ## Testing
 
