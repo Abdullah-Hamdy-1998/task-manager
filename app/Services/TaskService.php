@@ -2,20 +2,45 @@
 
 namespace App\Services;
 
-use App\Repositories\TaskRepository;
-use Illuminate\Database\Eloquent\Model;
+use App\Contracts\TaskRepositoryInterface;
+use App\Contracts\TaskServiceInterface;
+use App\Exceptions\TaskNotFoundException;
+use App\Models\Task;
+use App\Models\User;
+use Illuminate\Pagination\LengthAwarePaginator;
 
-class TaskService
+class TaskService implements TaskServiceInterface
 {
     protected $taskRepository;
 
-    public function __construct(TaskRepository $taskRepository)
+    public function __construct(TaskRepositoryInterface $taskRepository)
     {
         $this->taskRepository = $taskRepository;
     }
 
-    public function createTask(array $data): Model
+    public function getAllTasks(array $filters = [], int $perPage = 15): LengthAwarePaginator
     {
-        return $this->taskRepository->create($data);
+        return $this->taskRepository->getFilteredTasks($filters, $perPage);
+    }
+
+    public function getMyTasks(User $user, array $filters = [], int $perPage = 15): LengthAwarePaginator
+    {
+        return $this->taskRepository->getUserTasks($user, $filters, $perPage);
+    }
+
+    public function getTask(int $id): ?Task
+    {
+        return $this->taskRepository->find($id);
+    }
+
+    public function getTaskOrFail(int $id): Task
+    {
+        $task = $this->taskRepository->find($id);
+
+        if (! $task) {
+            throw new TaskNotFoundException($id);
+        }
+
+        return $task;
     }
 }
