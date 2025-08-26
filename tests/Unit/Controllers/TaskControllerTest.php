@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateTaskRequest;
 use App\Models\Role;
 use App\Models\Task;
 use App\Models\User;
+use App\Services\TaskAccessService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator;
@@ -18,11 +19,13 @@ beforeEach(function () {
     $this->taskService = \Mockery::mock(TaskServiceInterface::class);
     $this->taskCreationService = \Mockery::mock(TaskCreationServiceInterface::class);
     $this->taskUpdateService = \Mockery::mock(TaskUpdateServiceInterface::class);
+    $this->taskAccessService = \Mockery::mock(TaskAccessService::class);
 
     $this->controller = new TaskController(
         $this->taskService,
         $this->taskCreationService,
-        $this->taskUpdateService
+        $this->taskUpdateService,
+        $this->taskAccessService
     );
 
     // Create test user and login first
@@ -58,13 +61,13 @@ it('returns paginated tasks on index', function () {
         1
     );
 
-    $this->taskService
-        ->shouldReceive('getAllTasks')
-        ->once()
-        ->with($filters, $perPage)
-        ->andReturn($tasks);
-
     $request = new Request($filters + ['per_page' => $perPage]);
+
+    $this->taskAccessService
+        ->shouldReceive('getTasksForUser')
+        ->once()
+        ->with($this->user, $request, $perPage)
+        ->andReturn($tasks);
 
     // Act
     $response = $this->controller->index($request);
@@ -86,44 +89,16 @@ it('uses default per page when not provided on index', function () {
         1
     );
 
-    $this->taskService
-        ->shouldReceive('getAllTasks')
-        ->once()
-        ->with($filters, $defaultPerPage)
-        ->andReturn($tasks);
-
     $request = new Request;
+
+    $this->taskAccessService
+        ->shouldReceive('getTasksForUser')
+        ->once()
+        ->with($this->user, $request, $defaultPerPage)
+        ->andReturn($tasks);
 
     // Act
     $response = $this->controller->index($request);
-
-    // Assert
-    expect($response)->toBeInstanceOf(JsonResponse::class);
-    expect($response->getStatusCode())->toBe(200);
-});
-
-it('returns user tasks on myTasks', function () {
-    // Arrange
-    $filters = ['status' => 'pending'];
-    $perPage = 10;
-
-    $tasks = new LengthAwarePaginator(
-        collect([$this->task]),
-        1,
-        $perPage,
-        1
-    );
-
-    $this->taskService
-        ->shouldReceive('getMyTasks')
-        ->once()
-        ->with($this->user, $filters, $perPage)
-        ->andReturn($tasks);
-
-    $request = new Request($filters + ['per_page' => $perPage]);
-
-    // Act
-    $response = $this->controller->myTasks($request);
 
     // Assert
     expect($response)->toBeInstanceOf(JsonResponse::class);

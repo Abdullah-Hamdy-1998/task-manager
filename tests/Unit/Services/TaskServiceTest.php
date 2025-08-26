@@ -55,38 +55,6 @@ describe('TaskService', function () {
         });
     });
 
-    describe('getMyTasks', function () {
-        it('returns user tasks with default pagination', function () {
-            $mockPaginator = \Mockery::mock(LengthAwarePaginator::class);
-
-            $this->mockRepository
-                ->shouldReceive('getUserTasks')
-                ->once()
-                ->with($this->user, [], 15)
-                ->andReturn($mockPaginator);
-
-            $result = $this->service->getMyTasks($this->user);
-
-            expect($result)->toBe($mockPaginator);
-        });
-
-        it('returns user tasks with custom filters and pagination', function () {
-            $filters = ['status' => 'completed'];
-            $perPage = 20;
-            $mockPaginator = \Mockery::mock(LengthAwarePaginator::class);
-
-            $this->mockRepository
-                ->shouldReceive('getUserTasks')
-                ->once()
-                ->with($this->user, $filters, $perPage)
-                ->andReturn($mockPaginator);
-
-            $result = $this->service->getMyTasks($this->user, $filters, $perPage);
-
-            expect($result)->toBe($mockPaginator);
-        });
-    });
-
     describe('getTask', function () {
         it('returns task when found', function () {
             $taskId = 1;
