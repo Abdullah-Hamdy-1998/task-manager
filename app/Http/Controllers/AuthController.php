@@ -31,6 +31,10 @@ class AuthController extends Controller
         $validated = $request->validated();
         $result = $this->authService->login($validated);
 
+        if (isset($result['error'])) {
+            return response()->json(['error' => $result['error']], $result['status']);
+        }
+
         return response()->json(['token' => $result['token']], $result['status']);
     }
 
