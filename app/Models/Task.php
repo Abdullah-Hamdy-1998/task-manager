@@ -65,10 +65,62 @@ class Task extends Model
                     ->withTimestamps();
     }
 
+    /**
+     * Check if the task has any incomplete dependencies.
+     */
     public function hasIncompleteDependencies(): bool
     {
-        return $this->dependsOnTasks()->where('status', '!=', 'complete')->exists();
+        return $this->dependsOnTasks()->where('status', '!=', 'completed')->exists();
     }
 
+    /**
+     * Scope to filter tasks by status.
+     */
+    public function scopeByStatus($query, $status)
+    {
+        return $query->where('status', $status);
+    }
 
+    /**
+     * Scope to filter tasks by due date range.
+     */
+    public function scopeByDueDateRange($query, $from = null, $to = null)
+    {
+        if ($from) {
+            $query->where('due_date', '>=', $from);
+        }
+        if ($to) {
+            $query->where('due_date', '<=', $to);
+        }
+        return $query;
+    }
+
+    /**
+     * Scope to filter tasks by assignee.
+     */
+    public function scopeByAssignee($query, $assigneeId)
+    {
+        return $query->where('assignee_id', $assigneeId);
+    }
+
+    /**
+     * Scope to eager load all task relationships.
+     */
+    public function scopeWithRelations($query)
+    {
+        return $query->with([
+            'dependsOnTasks',
+            'dependentTasks',
+            'assignee',
+            'creator'
+        ]);
+    }
+
+    /**
+     * Scope for user's assigned tasks.
+     */
+    public function scopeForUser($query, User $user)
+    {
+        return $query->where('assignee_id', $user->id);
+    }
 }
