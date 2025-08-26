@@ -211,8 +211,9 @@ php artisan test
 
 ## API Documentation
 
-Import the Postman collection for complete API documentation:
-- [Task Management System Collection](Softxpert - Task Management System.postman_collection.json)
+You can import the Postman collection for testing the API:
+
+- [Download Collection](postman/TaskManagementSystem.postman_collection.json)
 
 ## Error Handling
 
