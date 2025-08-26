@@ -1,61 +1,251 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# Task Management System API
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+A production-ready Laravel 12 REST API for task management with role-based access control, JWT authentication, and dependency management.
 
-## About Laravel
+## Features
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+- **JWT Authentication** with token blacklisting
+- **Role-based Access Control** (Managers and Users)
+- **Task Management** with CRUD operations
+- **Task Dependencies** with cycle detection
+- **Dependency Validation** (tasks cannot be completed until dependencies are complete)
+- **Advanced Filtering** by status, due date range, and assignee
+- **Pagination** for task listings
+- **Docker Support** with Laravel Sail
+- **Comprehensive API Documentation** with Postman collection
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+## Technology Stack
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+- **Laravel 12** - PHP Framework
+- **JWT Auth** - Stateless authentication
+- **MySQL** - Database
+- **Docker** - Containerization
+- **Pest** - Testing framework
 
-## Learning Laravel
+## Quick Start
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework.
+### Prerequisites
 
-You may also try the [Laravel Bootcamp](https://bootcamp.laravel.com), where you will be guided through building a modern Laravel application from scratch.
+- PHP 8.2+
+- Composer
+- Node.js & NPM
+- MySQL 8.0+
+- Docker (optional)
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+### Local Setup
 
-## Laravel Sponsors
+1. **Clone the repository**
+   ```bash
+   git clone https://github.com/Abdullah-Hamdy-1998/task-manager.git
+   cd task-manager
+   ```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+2. **Install dependencies**
+   ```bash
+   composer install
+   npm install
+   ```
 
-### Premium Partners
+3. **Environment setup**
+   ```bash
+   cp .env.example .env
+   php artisan key:generate
+   php artisan jwt:secret
+   ```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+4. **Configure database**
+   Update `.env` file with your database credentials:
+   ```env
+   DB_CONNECTION=mysql
+   DB_HOST=127.0.0.1
+   DB_PORT=3306
+   DB_DATABASE=task_manager
+   DB_USERNAME=your_username
+   DB_PASSWORD=your_password
+   ```
 
-## Contributing
+5. **Run migrations and seeders**
+   ```bash
+   php artisan migrate --seed
+   ```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+6. **Start the development server**
+   ```bash
+   php artisan serve
+   ```
 
-## Code of Conduct
+   The API will be available at `http://localhost:8000`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Docker Setup
 
-## Security Vulnerabilities
+1. **Install Laravel Sail**
+   ```bash
+   composer require laravel/sail --dev
+   php artisan sail:install
+   ```
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+2. **Start Docker containers**
+   ```bash
+   ./vendor/bin/sail up -d
+   ```
 
-## License
+3. **Run migrations and seeders**
+   ```bash
+   ./vendor/bin/sail artisan migrate --seed
+   ```
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+   The API will be available at `http://localhost`
+
+## Seeded Test Accounts
+
+The system comes with pre-seeded accounts for testing:
+
+### Manager Account
+- **Email:** `manager@example.com`
+- **Password:** `password`
+- **Role:** Manager
+- **Permissions:** Create/update tasks, assign tasks to users
+
+### User Account
+- **Email:** `user@example.com`
+- **Password:** `password`
+- **Role:** User
+- **Permissions:** View assigned tasks, update own task status
+
+## API Endpoints
+
+### Authentication
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/register` | Register a new user |
+| POST | `/api/login` | Login and get JWT token |
+| POST | `/api/logout` | Logout and blacklist token |
+
+### Tasks
+
+| Method | Endpoint | Description | Authorization |
+|--------|----------|-------------|---------------|
+| GET | `/api/tasks` | List all tasks (managers) or my tasks (users) | Authenticated |
+| POST | `/api/tasks` | Create a new task | Manager only |
+| GET | `/api/tasks/{id}` | Get task details | Task owner/assignee |
+| PUT | `/api/tasks/{id}` | Update task | Manager only |
+| PATCH | `/api/tasks/{id}/status` | Update task status | Manager or assignee |
+| POST | `/api/tasks/{id}/dependencies` | Add task dependency | Manager only |
+
+
+### Query Parameters
+
+**Task Filtering:**
+- `status` - Filter by task status (pending, completed, canceled)
+- `due_from` - Filter tasks due from date (Y-m-d format)
+- `due_to` - Filter tasks due to date (Y-m-d format)
+- `assignee` - Filter by assignee ID
+- `per_page` - Number of items per page (default: 15)
+
+**Example:**
+```
+GET /api/tasks?status=pending&due_from=2025-01-01&due_to=2025-12-31&per_page=10
+```
+
+## Authentication
+
+The API uses JWT (JSON Web Tokens) for stateless authentication.
+
+### Getting a Token
+
+```bash
+curl -X POST http://localhost/api/login \
+  -H "Content-Type: application/json" \
+  -d '{
+    "email": "manager@example.com",
+    "password": "password"
+  }'
+```
+
+### Using the Token
+
+Include the token in the Authorization header:
+
+```bash
+curl -X GET http://localhost/api/tasks \
+  -H "Authorization: Bearer YOUR_JWT_TOKEN"
+```
+
+## Role-Based Access Control
+
+### Manager Permissions
+- Create and update tasks
+- Assign tasks to users
+- View all tasks
+- Add dependencies to tasks
+
+
+### User Permissions
+- View only assigned tasks
+- Update status of own tasks
+- Cannot create tasks
+
+## Task Dependencies
+
+- Tasks can have dependencies on other tasks
+- A task cannot be marked as completed until all its dependencies are completed
+- Circular dependencies are automatically detected and prevented
+- Dependencies are managed through the `/api/tasks/{id}/dependencies` endpoint
+
+## Database Schema
+
+![Database ERD](erd.png)
+
+## Testing
+
+Run the test suite using Pest:
+
+```bash
+# Local
+php artisan test
+
+# Docker
+./vendor/bin/sail artisan test
+```
+
+## API Documentation
+
+Import the Postman collection for complete API documentation:
+- [Task Management System Collection](softxpert-task-management-system.postman_collection.json)
+
+## Error Handling
+
+The API returns consistent JSON error responses:
+
+```json
+{
+  "error": "Error Type",
+  "message": "Detailed error message"
+}
+```
+
+## Performance Optimizations
+
+- **Eager Loading** - Relationships are eagerly loaded to prevent N+1 queries
+- **Database Indexing** - Proper indexes on frequently queried columns
+- **Pagination** - All list endpoints support pagination
+- **Query Optimization** - Efficient filtering and sorting
+
+## Security Features
+
+- JWT token blacklisting for secure logout
+- Role-based authorization policies
+- Input validation and sanitization
+- CORS protection
+- Rate limiting (configurable)
+
+## Development
+
+### Code Style
+
+The project follows PSR-12 coding standards. Run PHP CS Fixer:
+
+```bash
+./vendor/bin/pint
+```
